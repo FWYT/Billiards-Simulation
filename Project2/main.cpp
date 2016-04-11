@@ -22,9 +22,12 @@ using namespace std;
 
 GLUquadricObj *sphere = NULL;
 GLuint woodTex;
-GLuint ballTex;
+GLuint ballTex[15];
+GLint viewport[4];
+bool hits = false;
+bool startmove = false;
 canvas_t skin;
-canvas_t skin2;
+canvas_t skin2[15];
 float zoomfactor = 1.0;
 float width = 1000;
 float height = 1000;
@@ -38,12 +41,38 @@ bool viewpt = 0; // 0 = first person 1 = top view
 Vec3f ballpos[16];
 GLint mode;
 int rightclick = 0;
+int leftclick = 0;
+bool pocketed[16];
+int playerturn = 0;
 GLint pointernum, pointerx, pointery;
+float temppointerx = 0;
+float temppointery = 0;
+GLdouble realx = 0.0;
+GLdouble realy = 0.0;
+GLdouble realz = 0.0;
+GLdouble modelview[16];
+GLdouble projection[16];
+GLfloat z_cursor;
+Vec3f ballvec[16];
+int playerballid[2];
+bool collid[16][16];
 
+
+Vec3f proj(Vec3f v1, Vec3f v2) {
+	//projection v1 to v2:
+	// a1 = (a dot b)/(b dot b)   * b 
+	return (((v1.dot(v2)) / (v2.dot(v2)))* v2);
+}
+
+void animate(int value)
+{
+	startmove = false;
+}
 
 
 void drawBall()
 {
+	cout << "draw ball" << endl;
 	//cue ball
 	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
@@ -56,11 +85,11 @@ void drawBall()
 		string file = "Ball" + to_string(i + 1) + ".ppm";
 		char tmp[11];
 		strcpy(tmp, file.c_str());
-		ppmLoadCanvas(tmp, &skin2);
-		glGenTextures(1, &ballTex);
-		glBindTexture(GL_TEXTURE_2D, ballTex);
+		ppmLoadCanvas(tmp, &skin2[i]);
+		glGenTextures(1, &ballTex[i]);
+		glBindTexture(GL_TEXTURE_2D, ballTex[i]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, skin2.width, skin2.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, skin2.pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, skin2[i].width, skin2[i].height, 0, GL_RGBA, GL_UNSIGNED_BYTE, skin2[i].pixels);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -71,7 +100,7 @@ void drawBall()
 
 		glPushMatrix();
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, ballTex);
+		glBindTexture(GL_TEXTURE_2D, ballTex[i]);
 		glTranslatef(ballpos[i+1].v[0], ballpos[i+1].v[1], ballpos[i+1].v[2]);
 		glRotatef(90, 0.0, 0.0, 1.0);
 		gluSphere(sphere, 1.875, 10, 10);
@@ -472,6 +501,7 @@ void drawTable()
 
 void callback_display()
 {
+	std::cout << "display" << endl;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, width, height);
@@ -491,6 +521,52 @@ void callback_display()
 	gluLookAt(0, 250, 0, 0, 0, 0, 0.0, 0, -1.0);
 	glLineWidth(1.5);
 
+	if (hits) //left clicking
+	{
+		glBegin(GL_LINES);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]); //set one point on the cueball
+
+		glVertex3f(realx, 4.6, realy);
+
+		Vec3f oppopt(ballpos[0].v[0] - realx, 0.0, ballpos[0].v[2] - realy); //distance from cueball to mouse
+		Vec3f originpt(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]);
+
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]);
+
+		//dotted line 
+		int fk = 0;
+		bool shotlinestop = false;
+		oppopt = oppopt / (oppopt.magnitude()) * 3;
+
+		
+
+		while (!shotlinestop)
+		{
+			glVertex3f(originpt.v[0]+fk*oppopt.v[0], 4.6, originpt.v[2] + fk*oppopt.v[2]);
+			
+			for (int i = 1; i < 16; i++) //test line collision with balls
+			{
+				if (pow((originpt.v[0] + fk*oppopt.v[0] - ballpos[i].v[0]), 2) +
+					pow((originpt.v[2] + fk*oppopt.v[2] - ballpos[i].v[2]), 2) < 4)
+				{
+					shotlinestop = true;
+				}
+			}
+
+			//test collision with rails
+			if (originpt.v[2] + fk*oppopt.v[2] > 50 || originpt.v[2] + fk*oppopt.v[2] < -50 || 
+				originpt.v[0] + fk*oppopt.v[0] < -100 || originpt.v[0] + fk*oppopt.v[0] > 100) {
+				shotlinestop = true;
+			}
+			fk++;
+			
+		}
+		glEnd();
+
+	}
+
 	drawTable();
 	drawBall();
 
@@ -498,7 +574,49 @@ void callback_display()
 	glutSwapBuffers();
 }
 
+void callback_mouse(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		leftclick = 1;
+		temppointerx = x;
+		temppointery = y;
+		viewpt = 1;
+	}
 
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		leftclick = 0;
+		if (hits)
+		{
+			hits = false;
+			startmove = true;
+		}
+	}
+
+}
+
+void callback_motion(int x, int y) {
+	if (leftclick)
+	{
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+		glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+		glReadPixels((float)x, (float)y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z_cursor);
+		gluUnProject((float)x, (float)y, z_cursor, modelview, projection, viewport, &realx, &realy, &realz);
+
+		hits = true;
+	}
+}
+
+void cb_idle() {
+	if (startmove) 
+	{ 
+		glutTimerFunc(100, animate, 0); 
+	}
+	glutPostRedisplay();
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -520,20 +638,6 @@ int main(int argc, char* argv[])
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-
-
-	/*ppmLoadCanvas("Ball1.ppm", &skin2);
-	glGenTextures(1, &ballTex);
-	glBindTexture(GL_TEXTURE_2D, ballTex);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, skin2.width, skin2.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, skin2.pixels);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);*/
 
 	glLoadIdentity();
 	//second part
@@ -585,11 +689,8 @@ int main(int argc, char* argv[])
 		ballpos[i].v[1] = 4.6;
 		int neg = (rand() % 2) + 1;
 		ballpos[i].v[2] = (rand()%45 *(pow(-1, neg)))+1;
-		ballpos[i].v[0] = rand() % 95 * (pow(-1, neg));
+		ballpos[i].v[0] = rand() % 95 * (pow(-1, neg))+15;
 
-		/*cout << "neg: " << neg << endl;
-		cout << "2: " << ballpos[i].v[2] << endl;
-		cout << "0: " << ballpos[i].v[0] << endl;*/
 	}
 
 
@@ -597,6 +698,9 @@ int main(int argc, char* argv[])
 	glClearColor(0, 0, 0, 0);
 
 	glutDisplayFunc(callback_display);
+	glutMouseFunc(callback_mouse);
+	glutMotionFunc(callback_motion);
+	glutIdleFunc(cb_idle);
 	
 
 
