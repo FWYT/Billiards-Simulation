@@ -119,10 +119,15 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ppm_canvas.cpp" />
+    <ClCompile Include="cue-ball.cpp" />
+    <ClCompile Include="Constants.h" />
+    <ClCompile Include="sliding.cpp" />
     <ClCompile Include="vec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cue-ball.h" />
     <ClInclude Include="ppm_canvas.h" />
+    <ClInclude Include="sliding.h" />
     <ClInclude Include="vec3f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

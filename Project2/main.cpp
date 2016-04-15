@@ -18,6 +18,10 @@
 #include <iostream>
 #include <math.h>
 
+#include "Constants.h"
+#include "cue-ball.h"
+#include "sliding.h"
+
 using namespace std;
 
 GLUquadricObj *sphere = NULL;
@@ -38,7 +42,6 @@ float defx = 0;
 float defy = 80.0;
 float defz = 160.0;
 bool viewpt = 0; // 0 = first person 1 = top view
-Vec3f ballpos[16];
 GLint mode;
 int rightclick = 0;
 int leftclick = 0;
@@ -57,6 +60,34 @@ Vec3f ballvec[16];
 int playerballid[2];
 bool collid[16][16];
 
+//model data
+Vec3f ballpos[16]; //ball position
+Vec3f ballVel[16]; //ball velocity
+Vec3f cueVector;
+Vec3f cuePos;
+//double a = cueVector[0]; //horizontal displacement from center
+//double b = cueVector[2]; //vertical displacement from center
+//double ballRadius = 1.875;
+//double c = sqrt(pow(ballRadius, 2) - pow(a, 2) - pow(b, 2));
+//double ballMass = 0.165; //kg
+//double cueMass = 0.539; //kg
+//double cueV0 = 2; //cue initial velocity m/s
+//double theta = 0; //cue angle
+//double t = 0; //time
+//double g = 0.5; //gravity
+
+//double friction = 0.5;
+
+//state var for sliding
+/*Vec3f r_s[16]; //pos
+Vec3f v_s[16]; //vel 
+Vec3f a_s[16]; //angular
+Vec3f vel0;
+Vec3f ang0 = Vec3f(0.0, 0.0, 0.0);
+Vec3f u0 = vel0 + (ballRadius*Vec3f(0, 0, 1.0)).cross(ang0);*/
+
+void drawBall();
+
 
 Vec3f proj(Vec3f v1, Vec3f v2) {
 	//projection v1 to v2:
@@ -66,13 +97,32 @@ Vec3f proj(Vec3f v1, Vec3f v2) {
 
 void animate(int value)
 {
-	startmove = false;
+	if (startmove)
+	{		
+		//set up initial values from cue ball impact
+		double F = calcForce();
+		cout << "F " << F << endl;
+		Vec3f initV = linearVelocity(F);
+		Vec3f initA = angularVelocity(F);
+
+		//sliding movement
+		double t = slideDuration();
+
+		Vec3f initU = relativeVel(0);
+
+		Vec3f curPos = ballpos[0];
+
+		Vec3f newPos = position(initU, t, curPos);
+		ballpos[0] = newPos;
+
+
+		startmove = false;
+	}
 }
 
 
 void drawBall()
 {
-	cout << "draw ball" << endl;
 	//cue ball
 	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
@@ -80,7 +130,9 @@ void drawBall()
 	gluSphere(sphere, 1.875, 10, 10); //diameter = 2.25in -> 0.1875ft/2 ->0.09375*20 =>1.875
 	glPopMatrix();
 
-	for (int i = 0; i < 15; i++)
+	
+
+	/*for (int i = 0; i < 15; i++)
 	{
 		string file = "Ball" + to_string(i + 1) + ".ppm";
 		char tmp[11];
@@ -106,7 +158,7 @@ void drawBall()
 		gluSphere(sphere, 1.875, 10, 10);
 		glDisable(GL_TEXTURE_2D);
 		glPopMatrix();
-	}
+	}*/
 }
 
 
@@ -501,7 +553,6 @@ void drawTable()
 
 void callback_display()
 {
-	std::cout << "display" << endl;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, width, height);
@@ -513,11 +564,6 @@ void callback_display()
 
 	glPushMatrix();
 
-	/*if (!viewpt) {
-		gluLookAt(defx, defy, defz, ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2], upX, upY, upZ);
-	}//deflookatx,deflookaty, deflookatz,
-	else { gluLookAt(0, 200, 0, 0, 0, 0, 0, 0, -1.0); }
-	//	  glPopMatrix();*/
 	gluLookAt(0, 250, 0, 0, 0, 0, 0.0, 0, -1.0);
 	glLineWidth(1.5);
 
@@ -527,7 +573,12 @@ void callback_display()
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]); //set one point on the cueball
 
-		glVertex3f(realx, 4.6, realy);
+		glVertex3f(realx, 4.6, realy); //point of mouse
+
+		//save cue to ball vector
+		cueVector = Vec3f(ballpos[0].v[0] - realx, 0.0, ballpos[0].v[2] - realy);
+		cuePos = Vec3f(realx, 4.6, realy);
+	
 
 		Vec3f oppopt(ballpos[0].v[0] - realx, 0.0, ballpos[0].v[2] - realy); //distance from cueball to mouse
 		Vec3f originpt(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]);
@@ -590,6 +641,7 @@ void callback_mouse(int button, int state, int x, int y) {
 		{
 			hits = false;
 			startmove = true;
+			
 		}
 	}
 
@@ -683,6 +735,8 @@ int main(int argc, char* argv[])
 	ballpos[0].v[1] = 4.6;
 	ballpos[0].v[2] = 0.0;
 	ballpos[0].v[0] = 0.0;
+
+	//r_s[0] = ballpos[0];
 
 	for (int i = 1; i < 16; i++)
 	{

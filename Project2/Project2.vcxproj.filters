@@ -27,12 +27,27 @@
     <ClCompile Include="vec3f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cue-ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sliding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Constants.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ppm_canvas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vec3f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cue-ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sliding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
