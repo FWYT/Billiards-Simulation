@@ -36,6 +36,9 @@
     <ClCompile Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="rolling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ppm_canvas.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sliding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rolling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

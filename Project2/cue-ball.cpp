@@ -17,7 +17,7 @@ double calcForce()
 Vec3f linearVelocity(double F)
 {
 	//return Vec3f(0.0, (-F / ballMass)*cos(theta), (-F / ballMass)*sin(theta));
-	return Vec3f(0.0, (-F / ballMass)*cos(theta), (-F / ballMass)*sin(theta));
+	return Vec3f(0.0, (F / ballMass)*cos(theta), (F / ballMass)*sin(theta));
 }
 
 Vec3f angularVelocity(double F)
@@ -29,7 +29,8 @@ Vec3f angularVelocity(double F)
 
 Vec3f flipYZ(Vec3f v)
 {
-	double z = v[2];
+	//double z = v[2];
+	double x = v[0];
 	double y = v[1];
-	return Vec3f(v[0], z, y);
+	return Vec3f(y, x, v[2]);
 }

@@ -121,12 +121,14 @@
     <ClCompile Include="ppm_canvas.cpp" />
     <ClCompile Include="cue-ball.cpp" />
     <ClCompile Include="Constants.h" />
+    <ClCompile Include="rolling.cpp" />
     <ClCompile Include="sliding.cpp" />
     <ClCompile Include="vec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cue-ball.h" />
     <ClInclude Include="ppm_canvas.h" />
+    <ClInclude Include="rolling.h" />
     <ClInclude Include="sliding.h" />
     <ClInclude Include="vec3f.h" />
   </ItemGroup>

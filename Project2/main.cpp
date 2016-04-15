@@ -21,6 +21,7 @@
 #include "Constants.h"
 #include "cue-ball.h"
 #include "sliding.h"
+#include "rolling.h"
 
 using namespace std;
 
@@ -88,6 +89,14 @@ Vec3f u0 = vel0 + (ballRadius*Vec3f(0, 0, 1.0)).cross(ang0);*/
 
 void drawBall();
 
+double timer = 0.0;
+double ts = 0;
+double tr = 0;
+bool tsDone = false;
+bool trDone = false;
+Vec3f timePos[20];
+Vec3f curPos;
+
 
 Vec3f proj(Vec3f v1, Vec3f v2) {
 	//projection v1 to v2:
@@ -101,22 +110,78 @@ void animate(int value)
 	{		
 		//set up initial values from cue ball impact
 		double F = calcForce();
-		cout << "F " << F << endl;
+		//cout << "F " << F << endl;
 		Vec3f initV = linearVelocity(F);
 		Vec3f initA = angularVelocity(F);
 
-		//sliding movement
-		double t = slideDuration();
-
 		Vec3f initU = relativeVel(0);
 
-		Vec3f curPos = ballpos[0];
+		
 
-		Vec3f newPos = position(initU, t, curPos);
-		ballpos[0] = newPos;
+		//sliding movement
 
+		//double ts = slideDuration();
+		if (!ts && !tr)
+		{
+			//cout << "restart" << endl;
+			curPos = ballpos[0];
+			//cout << "curpos " << curPos << endl;
+			ts = slideDuration();
+			//cout << "time: " << ts << endl;
+		}
 
-		startmove = false;
+		if (timer <= ts && !tr)
+		{
+			//Vec3f newPos = position(initU, ts, curPos);
+			Vec3f newPos = position(initU, timer, curPos);
+			ballpos[0] = newPos;
+			//cout << "slide pos: " << newPos[0] << " " << newPos[1] << " " << newPos[2] << endl;
+		}
+
+		
+		//rolling movement
+		if (!tr && tsDone)
+		{
+			//cout << "start roll" << endl;
+			tr = rollDuration(initV);
+		}
+
+		if (timer <= tr && tsDone)
+		{
+			//Vec3f rPos = positionR(tr + ts, curPos);
+			Vec3f rPos = positionR(timer + ts, curPos);
+			//cout << "roll pos: " << rPos[0] << " " << rPos[1] << " " << rPos[2] << endl;
+			ballpos[0] = rPos;
+		}
+
+		if (!tsDone)
+		{
+			timer += ts / 40.0;
+		}
+		if (!trDone)
+		{
+			timer += tr / 80.0;
+		}
+
+		
+		if (timer > ts && !tsDone)
+		{
+			tsDone = true;
+			timer = 0;
+		}
+		if (timer > tr && !trDone && tsDone)
+		{
+			trDone = true;
+			timer = 0;
+		}
+		if (tsDone && trDone)
+		{
+			tr = 0;
+			ts = 0;
+			startmove = false;
+		}
+		//cout << "tsDone trDone" << tsDone << " " << trDone << endl;
+		
 	}
 }
 
@@ -648,7 +713,7 @@ void callback_mouse(int button, int state, int x, int y) {
 }
 
 void callback_motion(int x, int y) {
-	if (leftclick)
+	if (leftclick && !startmove)
 	{
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		glGetDoublev(GL_MODELVIEW_MATRIX, modelview);

@@ -7,6 +7,6 @@ Vec3f linearVelocityS(double t);
 
 Vec3f angularVelocityS(double t);
 
-double angularVelocityS_perp(double t);
+double angularVelocitySR_perp(double t);
 
 double slideDuration();
