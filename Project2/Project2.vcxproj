@@ -117,6 +117,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="collisions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ppm_canvas.cpp" />
     <ClCompile Include="cue-ball.cpp" />

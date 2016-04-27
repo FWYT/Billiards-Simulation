@@ -89,6 +89,8 @@ Vec3f u0 = vel0 + (ballRadius*Vec3f(0, 0, 1.0)).cross(ang0);*/
 
 void drawBall();
 
+//Vec3f ballVel[16];
+
 double timer = 0.0;
 double ts = 0;
 double tr = 0;
@@ -96,6 +98,14 @@ bool tsDone = false;
 bool trDone = false;
 Vec3f timePos[20];
 Vec3f curPos;
+double delta = 0.2;
+bool first = true;
+double diffZ;
+double diffX;
+bool second = false;
+Vec3f prevBallVel;
+int collidedX = 0; //if collided in x direction, if 1, reverse vel to go left. 
+int collidedZ = 0;
 
 
 Vec3f proj(Vec3f v1, Vec3f v2) {
@@ -107,81 +117,95 @@ Vec3f proj(Vec3f v1, Vec3f v2) {
 void animate(int value)
 {
 	if (startmove)
-	{		
-		//set up initial values from cue ball impact
-		double F = calcForce();
-		//cout << "F " << F << endl;
-		Vec3f initV = linearVelocity(F);
-		Vec3f initA = angularVelocity(F);
-
-		Vec3f initU = relativeVel(0);
-
-		
-
-		//sliding movement
-
-		//double ts = slideDuration();
-		if (!ts && !tr)
+	{	
+		//cout << "start" << endl;
+		if (ts == 0 && tr == 0)
 		{
-			//cout << "restart" << endl;
+			ts = slideDuration(cueVector.magnitude() / 10.0);
+			tr = slideDuration(cueVector.magnitude() / 10.0);
 			curPos = ballpos[0];
-			//cout << "curpos " << curPos << endl;
-			ts = slideDuration();
-			//cout << "time: " << ts << endl;
+			//cout << "cueVec " << cueVector.normalize() << endl;
+			//cout << "\n" << endl;
+			cout << "cue mag (" << cueVector << ") " << cueVector.magnitude() << endl;
+			cout << "cue mag / 10 " << cueVector.magnitude() / 10 << endl;
 		}
 
-		if (timer <= ts && !tr)
+		if (timer <= ts)
 		{
-			//Vec3f newPos = position(initU, ts, curPos);
-			Vec3f newPos = position(initU, timer, curPos);
-			ballpos[0] = newPos;
-			//cout << "slide pos: " << newPos[0] << " " << newPos[1] << " " << newPos[2] << endl;
+			//prevBallVel = ballVel[0];
+			ballVel[0] = flipYZ(linearVelocityS(timer, cueVector.magnitude()/10.0));
+			
 		}
 
-		
-		//rolling movement
-		if (!tr && tsDone)
+		if (timer > ts && timer <= ts+tr)
 		{
-			//cout << "start roll" << endl;
-			tr = rollDuration(initV);
+			//prevBallVel = ballVel[0];
+			ballVel[0] = flipYZ(linearVelocityR(timer, cueVector.magnitude()/10.0));
 		}
+		//cout << "vel: " << ballVel[0] << endl;
 
-		if (timer <= tr && tsDone)
-		{
-			//Vec3f rPos = positionR(tr + ts, curPos);
-			Vec3f rPos = positionR(timer + ts, curPos);
-			//cout << "roll pos: " << rPos[0] << " " << rPos[1] << " " << rPos[2] << endl;
-			ballpos[0] = rPos;
-		}
-
-		if (!tsDone)
-		{
-			timer += ts / 40.0;
-		}
-		if (!trDone)
-		{
-			timer += tr / 80.0;
-		}
+		Vec3f newPos = ballpos[0] + ballVel[0] * delta;
+		newPos[1] = 4.6;
 
 		
-		if (timer > ts && !tsDone)
+		//cout << "newpos: " << newPos << endl;
+		//right wall
+		if (newPos[0] > 98)
 		{
-			tsDone = true;
-			timer = 0;
+			//cout << "collidedX" << endl;
+			collidedX = 1;
 		}
-		if (timer > tr && !trDone && tsDone)
+		//left rail
+		if (newPos[0] < -98)
 		{
-			trDone = true;
-			timer = 0;
+			//cout << "collidedX" << endl;
+			collidedX = 1;
 		}
-		if (tsDone && trDone)
+		//top rail
+		if (newPos[2] < -48)
 		{
-			tr = 0;
+			//cout << "collidedZ" << endl;
+			collidedZ = 1;
+
+		}
+		//bottom rail
+		if (newPos[2] > 48)
+		{
+			//cout << "collidedZ" << endl;
+			collidedZ = 1;
+		}
+		//cout << " collidedX " << collidedX << endl;
+		
+		//rotate velocity to the cue vector direction
+		ballVel[0] = rotateToCue(ballVel[0], cueVector, ballVel[0]);
+
+		
+		//rail collisions
+		ballVel[0][0] *= pow(-1, collidedX);
+		ballVel[0][2] *= pow(-1, collidedZ);
+
+		//update
+		newPos = ballpos[0] + ballVel[0] * delta;
+		newPos[1] = 4.6;
+		
+		ballpos[0] = newPos;
+
+		
+		
+		timer += delta;
+		//cout << "\n" << endl;
+		
+		if (timer > ts + tr)
+		{
+			collidedX = 0;
+			collidedZ = 0;
+			timer = 0;
 			ts = 0;
+			tr = 0;
 			startmove = false;
+			first = true;
+			second = true;
 		}
-		//cout << "tsDone trDone" << tsDone << " " << trDone << endl;
-		
 	}
 }
 
@@ -245,6 +269,7 @@ void drawTable()
 	glVertex3f(50, 2.6, 50);
 	glEnd();
 
+	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, woodTex);
 

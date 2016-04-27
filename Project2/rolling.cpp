@@ -10,12 +10,27 @@
 
 using namespace std;
 
-Vec3f positionR(double t, Vec3f initPos)
+Vec3f positionR(double t, Vec3f initPos, int collidedRail, double V0)
 {
-	double F = calcForce();
+	double F = calcForce(V0);
 	Vec3f initV = flipYZ(linearVelocity(F));
 
-	Vec3f change = (initV*t) - (1.0 / 2)*friction*g*pow(t, 2)*initV.normalize();
+	double loss;
+	if (collidedRail)
+	{
+		loss = F*collisionLoss;
+	}
+	else
+	{
+		loss = 0;
+	}
+
+	if (collidedRail)
+	{
+		//cout << "COLLIDED" << endl;
+	}
+	Vec3f change = (pow(-1, collidedRail)*initV*t) - pow(-1, collidedRail)*(1.0 / 2)*friction*g*pow(t, 2)*initV.normalize();
+	change[0] += loss;
 	//cout << "init v: " << initV[0] << " " << initV[1] << " " << initV[2] << endl;
 	//cout << "rolling t " << t << endl;
 	//cout << "initV*t " << (initV*t)[0] << " " << (initV*t)[1] << " " << (initV*t)[0] << endl;
@@ -24,17 +39,17 @@ Vec3f positionR(double t, Vec3f initPos)
 	return initPos + change;
 }
 
-Vec3f linearVelocityR(double t)
+Vec3f linearVelocityR(double t, double V0)
 {
-	double F = calcForce();
+	double F = calcForce(V0);
 	Vec3f initV = linearVelocity(F);
 
-	return initV - friction*g*t*initV.normalize();
+	return initV - frictionR*g*t*initV.normalize();
 }
 
-double angularVelocityR(double t)
+double angularVelocityR(double t, double V0)
 {
-	double velMag = linearVelocityR(t).magnitude();
+	double velMag = linearVelocityR(t, V0).magnitude();
 	return velMag / ballRadius;
 }
 
@@ -43,5 +58,5 @@ double rollDuration(Vec3f initV)
 	//double F = calcForce();
 	//Vec3f initV = linearVelocity(F);
 
-	return initV.magnitude() / (friction*g);
+	return initV.magnitude() / (frictionR*g);
 }
