@@ -7,8 +7,8 @@
 <p>3) Re-organize code, make sure ball position, cue position etc is as according to the model in the paper. ✓</p>
 
 <h2>Part 2</h2>
-<p>1) Implement ball movement</p>
-<p>2) Implement ball-rail collision</p>
+<p>1) Implement ball movement ✓</p>
+<p>2) Implement ball-rail collision ✓</p>
 <p>3) Implement ball-ball collision</p>
 <p>4) Implement ball-pocket collision</p>
 
