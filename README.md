@@ -10,7 +10,8 @@
 <p>1) Implement ball movement ✓</p>
 <p>2) Implement ball-rail collision ✓</p>
 <p>3) Implement ball-ball collision ✓</p>
-<p>4) Implement ball-pocket collision</p>
+<p>4) Implement angular velocity </p>
+<p>5) Implement ball-pocket collision</p>
 
 <b>----------------LOW BAR DONE----------------------------------</b>
 
