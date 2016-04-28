@@ -5,12 +5,12 @@
 static const double ballMass = 0.165; //kg
 static const double cueMass = 0.539; //kg
 static const double ballRadius = 1.875;
-//static const double V0 = 3.0; //initial cue velocity
+static const double V0 = 3.0; //initial cue velocity
 static const double theta = 0.0;
 
 static const double g = 0.5; //gravity
-static const double friction = 0.5;
-static const double frictionR = 0.7;
+static const double friction = 0.3;
+static const double frictionR = 0.3;
 
 static const double collisionLoss = 20;
 

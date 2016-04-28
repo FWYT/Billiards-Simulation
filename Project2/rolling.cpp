@@ -10,9 +10,9 @@
 
 using namespace std;
 
-Vec3f positionR(double t, Vec3f initPos, int collidedRail, double V0)
+Vec3f positionR(double t, Vec3f initPos, int collidedRail)
 {
-	double F = calcForce(V0);
+	double F = calcForce();
 	Vec3f initV = flipYZ(linearVelocity(F));
 
 	double loss;
@@ -39,17 +39,17 @@ Vec3f positionR(double t, Vec3f initPos, int collidedRail, double V0)
 	return initPos + change;
 }
 
-Vec3f linearVelocityR(double t, double V0)
+Vec3f linearVelocityR(double t)
 {
-	double F = calcForce(V0);
+	double F = calcForce();
 	Vec3f initV = linearVelocity(F);
 
 	return initV - frictionR*g*t*initV.normalize();
 }
 
-double angularVelocityR(double t, double V0)
+double angularVelocityR(double t)
 {
-	double velMag = linearVelocityR(t, V0).magnitude();
+	double velMag = linearVelocityR(t).magnitude();
 	return velMag / ballRadius;
 }
 

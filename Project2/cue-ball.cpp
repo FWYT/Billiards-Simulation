@@ -6,7 +6,7 @@
 
 using namespace std;
 
-double calcForce(double V0)
+double calcForce()
 {
 	double F_top = 2 * ballMass * V0;
 	double F_bot = 1 + (ballMass / cueMass) + (5.0 / (2 * pow(ballRadius, 2)))*

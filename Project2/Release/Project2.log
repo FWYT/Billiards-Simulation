@@ -1,49 +1,65 @@
-﻿  main.cpp
-main.cpp(235): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(244): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(245): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(540): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(555): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(570): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(584): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(598): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(612): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(623): warning C4244: 'argument': conversion from 'float' to 'GLsizei', possible loss of data
-main.cpp(641): warning C4244: 'argument': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-main.cpp(641): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(644): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-main.cpp(645): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-main.cpp(645): warning C4305: 'argument': truncation from 'double' to 'float'
-main.cpp(648): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-main.cpp(663): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-main.cpp(697): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-main.cpp(698): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-main.cpp(722): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
-main.cpp(743): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-main.cpp(765): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-main.cpp(765): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-main.cpp(800): warning C4305: '=': truncation from 'double' to 'float'
-main.cpp(808): warning C4305: '=': truncation from 'double' to 'float'
-main.cpp(810): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-main.cpp(811): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  collisions.cpp
+  main.cpp
+main.cpp(89): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
+main.cpp(89): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+main.cpp(180): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(187): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(188): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(227): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+main.cpp(228): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+main.cpp(239): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(240): warning C4305: '=': truncation from 'double' to 'float'
+main.cpp(244): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(245): warning C4305: '=': truncation from 'double' to 'float'
+main.cpp(251): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+main.cpp(353): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(362): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(363): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(659): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(674): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(689): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(703): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(717): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(731): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(742): warning C4244: 'argument': conversion from 'float' to 'GLsizei', possible loss of data
+main.cpp(760): warning C4244: 'argument': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+main.cpp(760): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(763): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+main.cpp(764): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+main.cpp(764): warning C4305: 'argument': truncation from 'double' to 'float'
+main.cpp(767): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+main.cpp(782): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+main.cpp(816): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+main.cpp(817): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+main.cpp(841): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+main.cpp(862): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+main.cpp(884): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+main.cpp(884): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+main.cpp(919): warning C4305: '=': truncation from 'double' to 'float'
+main.cpp(935): warning C4305: '=': truncation from 'double' to 'float'
+main.cpp(937): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+main.cpp(938): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  ppm_canvas.cpp
   cue-ball.cpp
-cue-ball.cpp(20): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-cue-ball.cpp(27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-cue-ball.cpp(35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+cue-ball.cpp(21): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+cue-ball.cpp(28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+cue-ball.cpp(36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+cue-ball.cpp(65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+cue-ball.cpp(65): warning C4305: 'argument': truncation from 'double' to 'float'
   Constants.h
   rolling.cpp
-rolling.cpp(18): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 rolling.cpp(32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+rolling.cpp(33): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+rolling.cpp(47): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   sliding.cpp
 sliding.cpp(20): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
 sliding.cpp(28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-sliding.cpp(50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-sliding.cpp(59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-sliding.cpp(68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+sliding.cpp(62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+sliding.cpp(71): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+sliding.cpp(80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  vec3f.cpp
   Generating code
-  44 of 56 functions (78.6%) were compiled, the rest were copied from previous compilation.
-    21 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+  All 153 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   Project2.vcxproj -> C:\Users\Frances\Desktop\Project2\Release\Project2.exe
   Project2.vcxproj -> C:\Users\Frances\Desktop\Project2\Release\Project2.pdb (Full PDB)
