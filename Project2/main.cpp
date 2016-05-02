@@ -2,9 +2,10 @@
 #define _CRT_SECURE_NO_DEPRECATE 
 #endif
 
-#define _CRTDBG_MAP_ALLOC
+//#include <vld.h>
+
 #include <stdlib.h>
-#include <crtdbg.h>
+
 
 #include <stdio.h>
 
@@ -29,6 +30,7 @@
 
 using namespace std;
 
+int id;
 GLUquadricObj *sphere = NULL;
 GLuint woodTex;
 GLuint ballTex[15];
@@ -68,9 +70,10 @@ bool collid[16][16] = { {0} };
 //model data
 Vec3f ballpos[16]; //ball position
 Vec3f ballVel[16]; //ball velocity
+Vec3f angVel[16]; //angular velocity
 Vec3f cueVector;
 Vec3f cuePos;
-
+double V0;
 
 void drawBall();
 
@@ -84,13 +87,14 @@ double tr = 0;
 //Vec3f timePos[20];
 Vec3f curPos;
 double delta = 0.2;
-//bool first = true;
+bool first = true;
 //double diffZ;
 //double diffX;
 bool cueDone = false;
 //Vec3f prevBallVel;
+int valid[16] = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
 
-int collided[16][2] = { {0.0,0.0} };
+int collided[16][2] = { {0.0,0.0} }; //rail collisions
 
 /*
 Vec3f proj(Vec3f v1, Vec3f v2) {
@@ -115,39 +119,55 @@ void animate(int value)
 {
 	if (startmove)
 	{	
+		//cout << "cueVector Mag/30 " << cueVector.magnitude() / 20.0 << endl;
+		V0 = ((cueVector.magnitude() / 20.0) < 5.0) ? cueVector.magnitude() / 20.0 : 5.0;
+		//cout << "V0 " << V0 << endl;
+		//V0 = 3.0;
 		//cout << "start" << endl;
 		if (ts == 0 && tr == 0 && !cueDone)
 		{
-			ts = slideDuration();
-			tr = slideDuration();
+			ts = slideDuration(V0);
+			tr = slideDuration(V0);
 			curPos = ballpos[0];
 			
 		}
 
+		
 
 		if (timer <= ts)
 		{
 			//prevBallVel = ballVel[0];
-			ballVel[0] = flipYZ(linearVelocityS(timer));
+			ballVel[0] = flipYZ(linearVelocityS(timer, V0));
+			//angVel[0] = flipYZ(angularVelocityS(timer, V0));
+			//cout << "angVel " << angVel[0] << endl;
 			
 		}
 
 		if (timer > ts && timer <= ts+tr)
 		{
 			//prevBallVel = ballVel[0];
-			ballVel[0] = flipYZ(linearVelocityR(timer));
+			ballVel[0] = flipYZ(linearVelocityR(timer, V0));
+			//angVel[0] = flipYZ(angularVelocityS(timer));
 		}
 		
 		
 		//rotate velocity to the cue vector direction
+		ballVel[0] += angVel[0];
+		//cout << "with Ang " << ballVel[0] << endl;
 		ballVel[0] = rotateToCue(ballVel[0], cueVector, ballVel[0]);
+		//cout << "ballVel " << ballVel[0] << endl;
+		//cout << "ball pos " << ballpos[0] << endl;
 
+		
+
+
+		
 		//ball-ball collisions
 		//test ball collisions
 		double dist;
 		for (int ball1 = 0; ball1 < 16; ball1++)
 		{
-			for (int ball2 = 0; ball2 < 16; ball2++)
+			for (int ball2 = 0; ball2 < 3; ball2++)
 			{
 				if (ball1 != ball2)
 				{
@@ -164,99 +184,215 @@ void animate(int value)
 				}
 			}
 		}
-
+		
 		//do collisions
 		for (int i = 0; i < 16; i++)
 		{
-			for (int j = 0; j < 16; j++)
+			if (valid[i])
 			{
-				if (collid[i][j])
+				for (int j = 0; j < 3; j++)
 				{
-					Vec3f col = ballpos[i] - ballpos[j];
-					double len = col.magnitude();
-
-					if (len == 0.0)
+					if (collid[i][j])
 					{
-						col = Vec3f(1.0, 0.0, 0.0);
-						len = 1.0;
+						Vec3f col = ballpos[i] - ballpos[j];
+						double len = col.magnitude();
+
+						if (len == 0.0)
+						{
+							col = Vec3f(1.0, 0.0, 0.0);
+							len = 1.0;
+						}
+
+						col = col / len;
+						double aci = ballVel[i].dot(col);
+						double bci = ballVel[j].dot(col);
+
+						double acf = bci;
+						double bcf = aci;
+
+						ballVel[i] += (acf - aci)*col;
+						ballVel[j] += (bcf - bci)*col;
 					}
-
-					col = col / len;
-					double aci = ballVel[i].dot(col);
-					double bci = ballVel[j].dot(col);
-
-					double acf = bci;
-					double bcf = aci;
-
-					ballVel[i] += (acf - aci)*col;
-					ballVel[j] += (bcf - bci)*col;
 				}
 			}
 		}
 		
+		//pocket collisions
+		for (int i = 0; i < 16; i++)
+		{
+			if (valid[i])
+			{
+				//right top pocket
+				if (ballpos[i][0] > 96 && ballpos[i][2] < -46)
+				{
+					cout << i << "pocketed right top" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand()%3+97;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + -53;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+
+				//right bottom pocket
+				if (ballpos[i][0] > 96 && ballpos[i][2] > 46)
+				{
+					cout << i << "pocketed right bottom" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand() % 3 + 98;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + 49;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+
+				//left top pocket
+				if (ballpos[i][0] < -96 && ballpos[i][2] < -46)
+				{
+					cout << i << "pocketed left top" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand() % 3 + -102;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + -52;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+
+				//left bottom pocket
+				if (ballpos[i][0] < -96 && ballpos[i][2] > 46)
+				{
+					cout << i << "pocketed left bottom" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand() % 3 + -102;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + 49;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+
+				//top side pocket
+				if (ballpos[i][0] < 3 && ballpos[i][0] > -3 && ballpos[i][2] < -48)
+				{
+					cout << i << "pocketed top side" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand() % 6 + -3;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + -53;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+
+				//bottom side pocket
+				if (ballpos[i][0] < 3 && ballpos[i][0] > -3 && ballpos[i][2] > 48)
+				{
+					cout << i << "pocketed bottom side" << endl;
+					if (i != 0)
+					{
+						ballpos[i][0] = rand() % 6 + -3;
+						ballpos[i][1] = 4.6;
+						ballpos[i][2] = rand() % 3 + 50;
+						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						valid[i] = 0;
+					}
+				}
+			}
+
+		}
 		
 		
 		//rail collisions
 		for (int i = 0; i < 16; i++)
 		{
-			//right wall
-			if (ballpos[i][0] > 98)
+			if (valid[i])
 			{
-				//cout << "collidedX" << endl;
-				collided[i][0] = -1;
-			}
-			//left rail
-			if (ballpos[i][0] < -98)
-			{
-				//cout << "collidedX" << endl;
-				collided[i][0] = -1;
-			}
-			//top rail
-			if (ballpos[i][2] < -48)
-			{
-				//cout << "collidedZ" << endl;
-				collided[i][1] = -1;
+				//right wall
+				if (ballpos[i][0] > 98)
+				{
+					//if (i==0) cout << "collidedX1" << endl;
+					collided[i][0]++;
+					//countX++;
+					//cout << "collidedX " << collided[0][0] << endl;
+				}
+				//left rail
+				if (ballpos[i][0] < -98)
+				{
+					//if (i == 0) cout << "collidedX2" << endl;
+					collided[i][0]++;
+					//countX++;
+					//cout << "collidedX " << collided[0][0] << endl;
+				}
+				//top rail
+				if (ballpos[i][2] < -48)
+				{
+					//if (i == 0) cout << "collidedZ1" << endl;
+					collided[i][1]++;
+					//countZ++;
+					//cout << "collidedZ " << collided[0][1] << endl;
 
-			}
-			//bottom rail
-			if (ballpos[i][2] > 48)
-			{
-				//cout << "collidedZ" << endl;
-				collided[i][1] = -1;
+				}
+				//bottom rail
+				if (ballpos[i][2] > 48)
+				{
+					//if (i == 0) cout << "collidedZ2" << endl;
+					collided[i][1]++;
+					//countZ++;
+					//cout << "collidedZ " << collided[0][1] << endl;
+				}
 			}
 		}
+
 		
 		for (int i = 0; i < 16; i++)
 		{
-			ballVel[i][0] *= pow(-1, collided[i][0]);
-			ballVel[i][2] *= pow(-1, collided[i][1]);
+			if (valid[i])
+			{
+				ballVel[i][0] *= pow(-1, collided[i][0]);
+				//ballVel[i][0] *= pow(-1, countX);
+				ballVel[i][2] *= pow(-1, collided[i][1]);
+				//ballVel[i][2] *= pow(-1, countZ);
+			}
 		}
+		//cout << ballVel[0][2] << endl;
 
-
+		
 		
 		
 		//update position
 		for (int i = 0; i < 16; i++)
 		{
-			if (i == 0)
+			//cout << i << ": " << valid[i] << endl;
+			if (valid[i])
 			{
-				ballpos[i] = ballpos[i] + ballVel[i] * delta;
-				ballpos[i][1] = 4.6;
-			}
-			else
-			{
-				ballpos[i] = ballpos[i] + ballVel[i] * delta;
-				ballpos[i][1] = 4.6;
-
-				//ball is moving, subtract friction every time step
-				if (ballVel[i][0] != 0.0 || ballVel[i][1] != 0.0 || ballVel[i][2] != 0.0)
+				if (i == 0)
 				{
-					Vec3f old = ballVel[i];
-					ballVel[i] -= delta*friction*g*ballVel[i].normalize();
-					if ((old[0]<0.0 && ballVel[i][0]>0.0) || (old[0]>0.0 && ballVel[i][0]<0.0) ||
-						(old[2]<0.0 && ballVel[i][2]>0.0) || (old[2]>0.0 && ballVel[i][2] < 0.0))
+					ballpos[i] = ballpos[i] + ballVel[i] * delta;
+					ballpos[i][1] = 4.6;
+				}
+				else
+				{
+					ballpos[i] = ballpos[i] + ballVel[i] * delta;
+					ballpos[i][1] = 4.6;
+
+					//ball is moving, subtract friction every time step
+					if (ballVel[i][0] != 0.0 || ballVel[i][1] != 0.0 || ballVel[i][2] != 0.0)
 					{
-						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						Vec3f old = ballVel[i];
+						ballVel[i] -= delta*friction*g*ballVel[i].normalize();
+						if ((old[0]<0.0 && ballVel[i][0]>0.0) || (old[0]>0.0 && ballVel[i][0]<0.0) ||
+							(old[2]<0.0 && ballVel[i][2]>0.0) || (old[2]>0.0 && ballVel[i][2] < 0.0))
+						{
+							ballVel[i] = Vec3f(0.0, 0.0, 0.0);
+						}
 					}
 				}
 			}
@@ -270,7 +406,7 @@ void animate(int value)
 		//set ball-ball collisions to zero
 		memset(collid, 0, sizeof(collid));
 		
-		for (int i = 1; i < 16; i++)
+		for (int i = 1; i <16; i++)
 		{
 			collided[i][0] = 0;
 			collided[i][1] = 0;
@@ -294,6 +430,7 @@ void animate(int value)
 					
 		}
 
+		//cout << "none move " << noneMove() << endl;
 		//all balls done moving
 		if (noneMove())
 		{
@@ -302,6 +439,9 @@ void animate(int value)
 			startmove = false;
 			timer = 0;
 			cueDone = false;
+			//cout << "\n" << endl;
+			//countZ = 0;
+			//countX = 0;
 		}
 	}
 }
@@ -321,30 +461,54 @@ void drawBall()
 	//for (int i = 0; i < 15; i++)
 	for (int i = 0; i < 15; i++)
 	{
-		string file = "Ball" + to_string(i + 1) + ".ppm";
-		char tmp[11];
-		strcpy(tmp, file.c_str());
-		ppmLoadCanvas(tmp, &skin2[i]);
-		glGenTextures(1, &ballTex[i]);
-		glBindTexture(GL_TEXTURE_2D, ballTex[i]);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, skin2[i].width, skin2[i].height, 0, GL_RGBA, GL_UNSIGNED_BYTE, skin2[i].pixels);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		if (first)
+		{
+			string file = "Ball" + to_string(i + 1) + ".ppm";
+			char tmp[11];
+			strcpy(tmp, file.c_str());
+			ppmLoadCanvas(tmp, &skin2[i]);
+			glGenTextures(1, &ballTex[i]);
+			glBindTexture(GL_TEXTURE_2D, ballTex[i]);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, skin2[i].width, skin2[i].height, 0, GL_RGBA, GL_UNSIGNED_BYTE, skin2[i].pixels);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
 
+			
+/*
+			glPushMatrix();
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ballTex[i]);
+			glTranslatef(ballpos[i+1].v[0], ballpos[i+1].v[1], ballpos[i+1].v[2]);
+			glRotatef(90, 0.0, 0.0, 1.0);
+			gluSphere(sphere, 1.875, 10, 10);
+			glDisable(GL_TEXTURE_2D);
+			glPopMatrix();
+		*/
+		}
+		/*glColor3f(1.0, 0.0, 1.0);
+		glPushMatrix();
+		glTranslatef(ballpos[i+1].v[0], ballpos[i+1].v[1], ballpos[i+1].v[2]);
+		gluSphere(sphere, 1.875, 10, 10); //diameter = 2.25in -> 0.1875ft/2 ->0.09375*20 =>1.875
+		glPopMatrix();*/
 		glPushMatrix();
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, ballTex[i]);
-		glTranslatef(ballpos[i+1].v[0], ballpos[i+1].v[1], ballpos[i+1].v[2]);
+		glTranslatef(ballpos[i + 1].v[0], ballpos[i + 1].v[1], ballpos[i + 1].v[2]);
 		glRotatef(90, 0.0, 0.0, 1.0);
 		gluSphere(sphere, 1.875, 10, 10);
 		glDisable(GL_TEXTURE_2D);
 		glPopMatrix();
+	}
+
+	if (first)
+	{
+		first = false;
 	}
 }
 
@@ -858,13 +1022,25 @@ void cb_idle() {
 
 }
 
+void callback_keyboard(unsigned char key, int x, int y) {
+	switch (key)
+	{
+	case 27: // Escape key
+		glutDestroyWindow(id);
+
+		exit(0);
+		break;
+	}
+	glutPostRedisplay();
+}
+
 int main(int argc, char* argv[])
 {
 	//open a window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(width, height);
-	glutCreateWindow("Billiards  Simulation");
+	id = glutCreateWindow("Billiards  Simulation");
 
 	ppmLoadCanvas("wood.ppm", &skin);
 	glGenTextures(1, &woodTex);
@@ -938,8 +1114,8 @@ int main(int argc, char* argv[])
 	{
 		ballpos[i].v[1] = 4.6;
 		int neg = (rand() % 2) + 1;
-		ballpos[i].v[2] = (rand()%45 *(pow(-1, neg)))+1;
-		ballpos[i].v[0] = rand() % 95 * (pow(-1, neg))+15;
+		ballpos[i].v[2] = (rand()%40 *(pow(-1, neg)))+1;
+		ballpos[i].v[0] = rand() % 90 * (pow(-1, neg))+15;
 
 	}
 
@@ -950,6 +1126,7 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(callback_display);
 	glutMouseFunc(callback_mouse);
 	glutMotionFunc(callback_motion);
+	glutKeyboardFunc(callback_keyboard);
 	glutIdleFunc(cb_idle);
 	
 
@@ -962,6 +1139,6 @@ int main(int argc, char* argv[])
 	free(ballVel);
 	free(ballTex);
 	free(skin2);
-	_CrtDumpMemoryLeaks();
+
 	return 0;
 }
