@@ -17,7 +17,7 @@
 
 <h2>Part 3</h2>
 <p>1) Implement jump shots, extreme angle shots</p>
-<p>2) Make gui to specify amount of force and horizontal displacement of cue contact</p>
+<p>2) Make gui to specify amount of force and horizontal displacement of cue contact ✓ </p>
 <p>3) Specify angle of cue to ball</p>
 <p>4) Control camera movement</p>
 <p>5) Improve visuals, add table legs, background environment</p>
