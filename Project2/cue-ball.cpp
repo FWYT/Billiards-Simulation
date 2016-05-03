@@ -6,8 +6,9 @@
 
 using namespace std;
 
-double calcForce(double V0)
+double calcForce(double a, double b, double c, double V0)
 {
+	//cout << a << " " << b << " " << c << endl;
 	double F_top = 2 * ballMass * V0;
 	double F_bot = 1 + (ballMass / cueMass) + (5.0 / (2 * pow(ballRadius, 2)))*
 		(pow(a, 2) + pow(b, 2)*pow(cos(theta), 2) + pow(c, 2)*pow(sin(theta), 2) - 2 * b*c*cos(theta)*sin(theta));
@@ -21,7 +22,7 @@ Vec3f linearVelocity(double F)
 	return Vec3f(0.0, (F / ballMass)*cos(theta), (F / ballMass)*sin(theta));
 }
 
-Vec3f angularVelocity(double F)
+Vec3f angularVelocity(double F, double a, double b, double c)
 {
 	double MOI = (2.0 / 5)*ballMass*pow(ballRadius, 2);
 

@@ -1,60 +1,60 @@
 ﻿  main.cpp
-c:\users\frances\desktop\project2\project2\main.cpp(97): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
-c:\users\frances\desktop\project2\project2\main.cpp(97): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(206): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(213): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(214): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(231): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(232): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(233): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(245): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(246): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(247): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(259): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(260): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(261): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(273): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(274): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(275): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(287): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(288): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(289): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(301): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(302): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(303): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(359): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(361): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(378): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(379): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(383): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(384): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(390): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(521): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(530): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(531): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(827): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(842): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(857): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(871): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(885): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(899): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(910): warning C4244: 'argument': conversion from 'float' to 'GLsizei', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(928): warning C4244: 'argument': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(928): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(931): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(932): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(932): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(935): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(950): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(984): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(985): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(1009): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(1042): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(1064): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
-c:\users\frances\desktop\project2\project2\main.cpp(1064): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
-c:\users\frances\desktop\project2\project2\main.cpp(1099): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(1115): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\frances\desktop\project2\project2\main.cpp(1117): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\frances\desktop\project2\project2\main.cpp(1118): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(102): warning C4838: conversion from 'double' to 'int' requires a narrowing conversion
+c:\users\frances\desktop\project2\project2\main.cpp(102): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(227): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(234): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(235): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(252): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(253): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(254): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(266): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(267): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(268): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(280): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(281): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(282): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(294): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(295): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(296): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(308): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(309): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(310): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(322): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(323): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(324): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(380): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(382): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(399): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(400): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(404): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(405): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(411): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(548): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(557): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(558): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(854): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(869): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(884): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(898): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(912): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(926): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(947): warning C4244: 'argument': conversion from 'float' to 'GLsizei', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(968): warning C4244: 'argument': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(968): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(972): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(973): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(973): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(976): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(991): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(1029): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(1030): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(1059): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(1138): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(1160): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+c:\users\frances\desktop\project2\project2\main.cpp(1160): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+c:\users\frances\desktop\project2\project2\main.cpp(1195): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(1211): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\frances\desktop\project2\project2\main.cpp(1213): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\frances\desktop\project2\project2\main.cpp(1214): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Project2.vcxproj -> C:\Users\Frances\Desktop\Project2\Debug\Project2.exe
   Project2.vcxproj -> C:\Users\Frances\Desktop\Project2\Debug\Project2.pdb (Partial PDB)

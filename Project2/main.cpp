@@ -73,9 +73,14 @@ Vec3f ballVel[16]; //ball velocity
 Vec3f angVel[16]; //angular velocity
 Vec3f cueVector;
 Vec3f cuePos;
-double V0;
+
+double a = -1;
+double b = -1.0;
+double c = -1.0; 
+double V0 = -1;
 
 void drawBall();
+int step = 0;
 
 //Vec3f ballVel[16];
 
@@ -120,14 +125,15 @@ void animate(int value)
 	if (startmove)
 	{	
 		//cout << "cueVector Mag/30 " << cueVector.magnitude() / 20.0 << endl;
-		V0 = ((cueVector.magnitude() / 20.0) < 5.0) ? cueVector.magnitude() / 20.0 : 5.0;
+		//V0 = ((cueVector.magnitude() / 20.0) < 5.0) ? cueVector.magnitude() / 20.0 : 5.0;
 		//cout << "V0 " << V0 << endl;
 		//V0 = 3.0;
 		//cout << "start" << endl;
+		//cout << a << " " << b << " " << c << endl;
 		if (ts == 0 && tr == 0 && !cueDone)
 		{
-			ts = slideDuration(V0);
-			tr = slideDuration(V0);
+			ts = slideDuration(a, b, c, V0);
+			tr = slideDuration(a, b, c, V0);
 			curPos = ballpos[0];
 			
 		}
@@ -136,25 +142,40 @@ void animate(int value)
 
 		if (timer <= ts)
 		{
+			//cout << "slide" << endl;
 			//prevBallVel = ballVel[0];
-			ballVel[0] = flipYZ(linearVelocityS(timer, V0));
-			//angVel[0] = flipYZ(angularVelocityS(timer, V0));
+			ballVel[0] = flipYZ(linearVelocityS(timer, a, b, c, V0));
+			angVel[0] = flipYZ(angularVelocityS(timer, a, b, c, V0));
 			//cout << "angVel " << angVel[0] << endl;
 			
 		}
 
 		if (timer > ts && timer <= ts+tr)
 		{
+			//cout << "roll " << endl;
 			//prevBallVel = ballVel[0];
-			ballVel[0] = flipYZ(linearVelocityR(timer, V0));
+			ballVel[0] = flipYZ(linearVelocityR(timer, a, b, c, V0));
+			//angVel[0] = Vec3f(0.0, 0.0, 0.0);
 			//angVel[0] = flipYZ(angularVelocityS(timer));
 		}
 		
 		
 		//rotate velocity to the cue vector direction
-		ballVel[0] += angVel[0];
+		if (cueVector[2] > 0)
+		{
+			/*angVel[0][0] *= -1;*/
+			//cout << "angVel " << angVel[0] << endl;
+			ballVel[0] -= angVel[0];
+		}
+		else
+		{
+			//cout << "angVel " << angVel[0] << endl;
+			ballVel[0] += angVel[0];
+		}
+
 		//cout << "with Ang " << ballVel[0] << endl;
 		ballVel[0] = rotateToCue(ballVel[0], cueVector, ballVel[0]);
+		
 		//cout << "ballVel " << ballVel[0] << endl;
 		//cout << "ball pos " << ballpos[0] << endl;
 
@@ -228,7 +249,7 @@ void animate(int value)
 					cout << i << "pocketed right top" << endl;
 					if (i != 0)
 					{
-						ballpos[i][0] = rand()%3+97;
+						ballpos[i][0] = rand()%4+99;
 						ballpos[i][1] = 4.6;
 						ballpos[i][2] = rand() % 3 + -53;
 						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
@@ -242,7 +263,7 @@ void animate(int value)
 					cout << i << "pocketed right bottom" << endl;
 					if (i != 0)
 					{
-						ballpos[i][0] = rand() % 3 + 98;
+						ballpos[i][0] = rand() % 4 + 99;
 						ballpos[i][1] = 4.6;
 						ballpos[i][2] = rand() % 3 + 49;
 						ballVel[i] = Vec3f(0.0, 0.0, 0.0);
@@ -439,6 +460,12 @@ void animate(int value)
 			startmove = false;
 			timer = 0;
 			cueDone = false;
+			step = 0;
+			a = -1.0;
+			b = -1.0;
+			c = -1.0;
+			V0 = -1.0;
+
 			//cout << "\n" << endl;
 			//countZ = 0;
 			//countX = 0;
@@ -903,8 +930,18 @@ void drawTable()
 	glPopMatrix();
 }
 
+void drawGUI()
+{
+	glColor3f(1.0, 1.0, 1.0);
+	glPushMatrix();
+	glTranslatef(0.0, 3, 100);
+	gluSphere(sphere, 20, 10, 10);
+	glPopMatrix();
+}
+
 void callback_display()
 {
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, width, height);
@@ -919,13 +956,17 @@ void callback_display()
 	gluLookAt(0, 250, 0, 0, 0, 0, 0.0, 0, -1.0);
 	glLineWidth(1.5);
 
+
 	if (hits) //left clicking
 	{
 		glBegin(GL_LINES);
 		glColor3f(1.0, 0.0, 0.0);
+
 		glVertex3f(ballpos[0].v[0], ballpos[0].v[1], ballpos[0].v[2]); //set one point on the cueball
 
+		
 		glVertex3f(realx, 4.6, realy); //point of mouse
+
 
 		//save cue to ball vector
 		cueVector = Vec3f(ballpos[0].v[0] - realx, 0.0, ballpos[0].v[2] - realy);
@@ -970,8 +1011,10 @@ void callback_display()
 
 	}
 
+	//drawGUI();
 	drawTable();
 	drawBall();
+	
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -980,27 +1023,34 @@ void callback_display()
 void callback_mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		leftclick = 1;
-		temppointerx = x;
-		temppointery = y;
-		viewpt = 1;
+		if (step == 1)
+		{
+			leftclick = 1;
+			temppointerx = x;
+			temppointery = y;
+			viewpt = 1;
+		}
 	}
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		leftclick = 0;
-		if (hits)
+		if (step == 1)
 		{
-			hits = false;
-			startmove = true;
-			
+			leftclick = 0;
+			if (hits)
+			{
+				hits = false;
+				startmove = true;
+
+			}
 		}
 	}
 
 }
 
 void callback_motion(int x, int y) {
-	if (leftclick && !startmove)
+	
+	if (leftclick && !startmove && step == 1)
 	{
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
@@ -1013,7 +1063,53 @@ void callback_motion(int x, int y) {
 	}
 }
 
+void consoleInput(int value)
+{
+	if (step == 0)
+	{
+		while (a < -0.5 || a > 0.5)
+		{
+			cout << "Enter horizontal displacement from center of cue ball between -0.5 and 0.5: ";
+			cin >> a;
+		}
+		while (b < -0.5 || b > 0.5)
+		{
+			cout << "Enter vertical displacement from center of cue ball between -0.5 and 0.5: ";
+			cin >> b;
+		}
+		while (V0 < 0.0 || V0 > 5.0)
+		{
+		cout << "Enter initial cue velocity between 0.0 and 5.0: ";
+		cin >> V0;
+		}
+		c = sqrt(pow(ballRadius, 2) - pow(a, 2) - pow(b, 2));
+		step = 1;
+	}
+}
+
 void cb_idle() {
+	//cout << "step " << step << endl;
+	if (step == 0)
+	{
+		/*while (a < -0.5 || a > 0.5)
+		{
+			cout << "Enter horizontal displacement from center of cue ball between -0.5 and 0.5: ";
+			cin >> a;
+		}
+		/*while (b < -0.5 || b > 0.5)
+		{
+			cout << "Enter vertical displacement from center of cue ball between -0.5 and 0.5: ";
+			cin >> b;
+		}*/
+		/*while (V0 < 0.0 || V0 > 5.0)
+		{
+			cout << "Enter initial cue velocity between 0.0 and 5.0: ";
+			cin >> V0;
+		}*/
+		/*c = sqrt(pow(ballRadius, 2) - pow(a, 2) - pow(b, 2));
+		step = 1;*/
+		glutTimerFunc(100, consoleInput, 0);
+	}
 	if (startmove) 
 	{ 
 		glutTimerFunc(100, animate, 0); 
@@ -1119,16 +1215,26 @@ int main(int argc, char* argv[])
 
 	}
 
-
+	
+	/*if (pause)
+	{
+		cout << "enter int: ";
+		int xy;
+		cin >> xy;
+		cout << "you entered: " << xy << endl;
+	}*/
 
 	glClearColor(0, 0, 0, 0);
 
-	glutDisplayFunc(callback_display);
-	glutMouseFunc(callback_mouse);
-	glutMotionFunc(callback_motion);
+	//if (!pause)
+	//{
+		glutDisplayFunc(callback_display);
+		glutMouseFunc(callback_mouse);
+		glutMotionFunc(callback_motion);
+		
+		glutIdleFunc(cb_idle);
+	//}
 	glutKeyboardFunc(callback_keyboard);
-	glutIdleFunc(cb_idle);
-	
 
 
 	//hand control to glut
