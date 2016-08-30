@@ -13,18 +13,7 @@
 <p>4) Implement angular velocity ✓</p>
 <p>5) Implement ball-pocket collision ✓</p>
 
-<b>----------------LOW BAR DONE----------------------------------</b>
-
 <h2>Part 3</h2>
-<p>1) Implement jump shots, extreme angle shots</p>
-<p>2) Make gui to specify amount of force and horizontal displacement of cue contact ✓ </p>
-<p>3) Specify angle of cue to ball</p>
-<p>4) Control camera movement</p>
-<p>5) Improve visuals, add table legs, background environment</p>
+<p>1) Make gui to specify amount of force and horizontal displacement of cue contact ✓ </p>
+<p>2) Specify angle of cue to ball ✓</p>
 
-<b>-----------------HIGH BAR DONE --------------------------------</b>
-
-<h2>Part 4</h2>
-<p>1) Teach computer to find path itself</p>
-
-<b>-----------------EXTREME BAR DONE----------------------------</b>
