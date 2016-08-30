@@ -1,5 +1,7 @@
 <h1>Billiards Simulations based on "An Event Based Pool Physics Simulator" by Will Leckie and Michael Greenspan.</h1>
 
+<p>See SimulationsFinalWriteup.pdf for summary</p>
+
 <h2>TO-DO:</h2>
 <h3>Part 1</h3>
 <p>1) Draw table and balls ✓</p>
